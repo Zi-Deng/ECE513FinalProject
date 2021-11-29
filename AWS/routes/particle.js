@@ -24,8 +24,8 @@ router.post('/publish', function(req, res){
     getDeviceData(req)
     //console.log(req.body);
     request
-    .post("https://api.particle.io/v1/devices/" + deviceInfo.id + "/cloudcmd")
-    .set('Authorization', 'Bearer ' + deviceInfo.token)
+    .post("https://api.particle.io/v1/devices/e00fce6885903bb14139f4eb/cloudcmd")
+    .set('Authorization', 'Bearer f59d85c9247f431c723429879c9cf8377ce019c3')
     .set('Accept', 'application/json')
     .set('Content-Type', 'application/json')
     .send({ args: JSON.stringify(req.body)}) 
@@ -38,12 +38,12 @@ router.post('/publish', function(req, res){
 });
 
 router.get('/ping', function (req,res) {
-    getDeviceData()
+    getDeviceData(req)
     request
-        .put("https://api.particle.io/v1/devices/" + deviceInfo.id + "/ping")
-        .set('Authorization', 'Bearer ' + deviceInfo.token)
+        .put("https://api.particle.io/v1/devices/e00fce6885903bb14139f4eb/ping")
+        .set('Authorization', 'Bearer f59d85c9247f431c723429879c9cf8377ce019c3')
         .set('Accept', 'application/json')
-        .send() 
+        .send()  
         .then(response => {
             res.status(200).json({cmd: 'ping', success: true, data: JSON.parse(response.text)});
         })
