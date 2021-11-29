@@ -84,8 +84,8 @@ int CDoor::getSensorVal() {
 }
 
 void CDoor::createStatusStr() {
-  statusStr = String::format("{\"Close\":%d, \"doorProximity\":%f}",
-    state_D0, doorProximity
+  statusStr = String::format("{\"Close\":%d, \"doorProximity\":%.2f, \"sensorVal\":%d}",
+    state_D0, doorProximity, sensorVal
   );
 }
 
