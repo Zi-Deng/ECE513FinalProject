@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="stylesheets/style.css" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="javascripts/particle.js"></script>
+  </head>
+  <body>
+    <h1>Smart Devices</h1>
+    <div class="navigation">
+      <button onclick="location.href='registerdevice.html'">Register A Device</button>
+      <button onclick="localStorage.removeItem('token'); location.href='index.html'">Log Out</button>
+      <button onclick="location.href='home.html'">Home</button>
+    </div>
+    <div class="centerDiv">
+      <div>
+        <h2 id="curTime" style="text-align: center; color:blue">Time information here</h2>
+      </div>
+      <div>
+        <button id="btnPing" onclick="pingTest()">Ping</button>
+        <label>Device status:</label>
+        <input id="ping_status" name="ping_status" style="width:600px;" readonly value="">
+      </div>
+      <br/>
+      <div>
+        <button id="btnEnablePublish" onclick="enableDisablePublish()">Enable publish</button>
+      </div>
+      <br/>
+      <div style="display:inline-block; width:99%; height: 200px;">
+        <textarea id="cmdStatusData" style="width:100%; height:100%"></textarea>
+      </div>
+      
+  </div>
+  </body>
+</html>
