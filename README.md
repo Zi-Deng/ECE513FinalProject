@@ -23,9 +23,17 @@ Our particle firmware uses code from the ECE513 smartLightExample code and the P
 
 Our localhost features use code from the ParticleDeviceControllerUsingWebGUI example from ECE513. We are using node.js to create a local host server that displays html code stylized by css to control our particle device.
 
+Our AWS features use ...
 
+### How to Use
+To use the Particle portion of our repository. Change directories into the Particle firmware directory. From there use VSCode + Particle Workbench to Configure the Particle Project, Compile the project code and the Flash the application.
+
+To use the the localhost features of our repository. Change directories into the WebGUI directory. Use the node package manager to install the serial port package. Then use node to start the JavaScript code to spin up the server.
+
+To use the AWS features...
 
 ## General Particle Project Information
+
 
 Every new Particle project is composed of 3 important elements that you'll see have been created in your project directory for 513FinalProject.
 
