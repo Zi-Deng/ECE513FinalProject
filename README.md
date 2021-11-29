@@ -10,7 +10,7 @@ Ramon Driesen - 1st Year Masters ECE - edriesen@email.arizona.edu
 We are a ECE513 Group.
 
 ### AWS Address
-Link to the AWS Address
+http://ec2-18-116-89-134.us-east-2.compute.amazonaws.com:3000/index.html
 
 ### Video Demonstration
 Youtube link to the video demo
