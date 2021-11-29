@@ -14,7 +14,7 @@
 #define RGB_BRIGHTNESS_MAX      255
 #define RGB_BRIGHTNESS_DEAULT   128
 // photoresistor
-#define DOOR_SENSOR         A1
+#define DOOR_SENSOR         A2
 #define LIGHT_SENSOR        A0
 #define LIGHT_SENSOR_MIN    500
 #define LIGHT_SENSOR_MAX    2500
