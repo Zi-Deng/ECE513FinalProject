@@ -93,6 +93,12 @@
             $('#curBrightness').html(data.light.b);
           }
         }
+        //update door status
+        //if ("door" in data) $("#doorstatus").html(data.door);
+        //update Temp and Humid
+        //if ("temp" in data) $("#temp").html(data.temp);
+        //if ("humid" in data) $("#humid").html(data.humid);
+      
         if ("simclock" in data) $('#curTime').html(data.simclock);
       }
 
