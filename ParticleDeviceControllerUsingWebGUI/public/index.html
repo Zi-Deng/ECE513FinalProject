@@ -94,11 +94,16 @@
           }
         }
         //update door status
-        //if ("door" in data) $("#doorstatus").html(data.door);
+        if ("door" in data) {
+          $("#doorstatus").html(data.door);
+        }
         //update Temp and Humid
-        //if ("temp" in data) $("#temp").html(data.temp);
-        //if ("Humid" in data)
-        $("#humid").html(data.Humid);
+        if ("Humid" in data) {
+          $("#humid").html(data.Humid);
+        }
+        if ("Temp" in data) {
+          $("#temp").html(data.Temp);
+        }
 
         //if ("simclock" in data) $('#curTime').html(data.simclock);
       }
