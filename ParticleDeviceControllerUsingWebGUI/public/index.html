@@ -196,13 +196,20 @@
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
+
+      function toggleClimateControl() {
+        window.alert("FIX toggleClimateControl() function.");
+      }
+
+      function toggleFan() {
+        window.alert("FIX toggleFan() funciton.");
+      }
       
 
 </script>
   </head>
   <body>
     <h1>Controller GUI</h1>
-    
     <div class="centerDiv">
       <table>
         <tr><td colspan="4"><span></span></td></tr>
@@ -273,12 +280,63 @@
       <br/>
       <table>
         <tr>
-          <th colspan="2">LED (D7) blinking</th>
+          <th colspan="1">Door Status</th>
         </tr>
         <tr>
-          <td>Hz:</td>
-          <td><input id="ledHzSlider" type="range" min="1" max="10" step="1" value="1" onchange="toggleLedControl(this.value)"></td>
+          <td>
+            <span id="doorstatus"></span>
+          </td>
           
+          
+        </tr>
+      </table>
+      <br/>
+      <table>
+        <tr>
+          <th colspan="2">System Mode</th>
+        </tr>
+        <tr>
+          <td>Modes:</td>
+          <!-- Fix onclick function-->
+          <td><button id="heatOn" onclick="toggleClimateControl()">Heat</button>
+          <button id="off" onclick="toggleClimateControl()">Off</button>
+          <button id="coolOn" onclick="toggleClimateControl()">Cool</button></tr></td>
+        </tr>
+      </table>
+      <br/>
+      <table>
+        <tr>
+          <th colspan="2">Fan Mode</th>
+        </tr>
+        <tr>
+          <td>Modes:</td>
+          <!-- Fix onclick function-->
+          <td><button id="fan_on" onclick="toggleFan()">On</button>
+          <button id="fan_auto"onclick="toggleFan()">Auto</button></tr></td>
+        </tr>
+      </table>
+      <br/>
+      <table>
+        <tr>
+          <th colspan="4">Temperature and Humidity</th>
+        </tr>
+        <tr>
+          <td>Temperature:</td>
+          <!-- Add temperature display onclick function-->
+          <td><span id="temp"></span></td>
+        </tr>
+        <tr>
+          <td>Humidity:</td>
+          <td><span id="humid"></span></td>
+          <!-- Add humidity display onclick function-->
+        </tr>
+        <tr>
+          <td>
+            <form>
+              <input type="text" name="setTemp">
+              <input type="submit" value="Set Temperature">
+            </form>
+          </td>
         </tr>
       </table>
       <br/>
