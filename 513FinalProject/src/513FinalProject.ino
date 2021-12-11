@@ -16,6 +16,15 @@ CSmartLight smartLight;
 CDoor door;
 int counter;
 
+void systemControlCmdProcessing(JSONValue cmdJson) {
+  JSONObjectIterator iter(cmdJson);
+  while (iter.next()) {
+    if (iter.name() == "heat") {
+      digitalWrite(LED2, HIGH);
+    }
+  }
+}
+
 void serialCmdProcessing() {
   if (Serial.available() <= 0) return;
   String cmdStr = "";
@@ -30,9 +39,12 @@ void serialCmdProcessing() {
       smartLight.cmdProcessing(iter.value());
     } else if (iter.name() == "door") {
       door.cmdProcessing(iter.value());
+    } else if (iter.name() == "systemControl") {
+      systemControlCmdProcessing(iter.value());
     }
   }
 }
+
 
 
 
@@ -86,7 +98,7 @@ void loop() {
   smartLight.execute();
 
   unsigned long period = millis() - t;
-  door.execute();
+  //door.execute();
   if (counter % (SERAIL_COMM_FREQUENCY * LOOP_FREQUENCY) == 0) {
     counter = 0;
     Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"ct\":%ld}",

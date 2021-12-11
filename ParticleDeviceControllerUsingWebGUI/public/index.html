@@ -13,7 +13,7 @@
       h1 {
         text-align: center;
       }
-      
+
       .centerDiv {
         position:absolute;
         left: 50%;
@@ -36,7 +36,7 @@
       }
 
     </style>
-    
+
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script type="text/javascript" src="/javascripts/rangeslider.min.js"></script>
     <script>
@@ -75,7 +75,7 @@
       function updateGUI(data) {
         if (!guiUpdated) {
           if ("light" in data) {
-            if ("L0" in data.light) $('#smartlightonoff').prop("checked", data.light.L0).change(); 
+            if ("L0" in data.light) $('#smartlightonoff').prop("checked", data.light.L0).change();
             if ("L1" in data.light) $('#smartlightMode').prop("checked", data.light.L1).change();
             if ("b" in data.light) $('#birghtnessSlider').val(data.light.b).change();
             if ("m" in data.light) $('#sensorMinSlider').val(data.light.m).change();
@@ -111,18 +111,18 @@
           if (data.cmd === "scan") updateAvailableSerialList(data);
           else if (data.cmd === "open") finishOpenClose(data);
           else if (data.cmd === "close") finishOpenClose(data);
-          
+
           if (data.cmd === "read") {
             let curStr = $('#rdData').html();
             curStr += JSON.stringify(data.data);
             $('#rdData').html(curStr);
-            document.getElementById("rdData").scrollTop = document.getElementById("rdData").scrollHeight; 
+            document.getElementById("rdData").scrollTop = document.getElementById("rdData").scrollHeight;
             // update GUI
             updateGUI(data.data);
           }
           else {
             $('#cmdStatusData').html(JSON.stringify(data, null, 2));
-          } 
+          }
         }
       }
 
@@ -172,7 +172,7 @@
           }
         }
       }
-      
+
       function smartLightControl(option, value) {
         let txcmd = {
           cmd: "write",
@@ -181,7 +181,7 @@
           }
         };
         txcmd.data.smartlight[option] = value;
-        
+
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
@@ -197,14 +197,22 @@
         serailCmd(txcmd);
       }
 
-      function toggleClimateControl() {
-        window.alert("FIX toggleClimateControl() function.");
+      function toggleClimateControlHeat() {
+        //window.alert("FIX toggleClimateControl() function.");
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: {"heat": 1}
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
       }
 
       function toggleFan() {
         window.alert("FIX toggleFan() funciton.");
       }
-      
+
 
 </script>
   </head>
@@ -227,7 +235,7 @@
           <td>
             <input id="com_status" name="com_status" style="width:600px;" readonly value="">
           </td>
-        </tr>  
+        </tr>
       </table>
       <br/>
       <table>
@@ -275,7 +283,7 @@
           <td>Present brightness:</td>
           <td><div id="curBrightness" style="width: 100%; height:100%;"></div></td>
         </tr>
-        
+
       </table>
       <br/>
       <table>
@@ -286,8 +294,8 @@
           <td>
             <span id="doorstatus"></span>
           </td>
-          
-          
+
+
         </tr>
       </table>
       <br/>
@@ -298,9 +306,9 @@
         <tr>
           <td>Modes:</td>
           <!-- Fix onclick function-->
-          <td><button id="heatOn" onclick="toggleClimateControl()">Heat</button>
-          <button id="off" onclick="toggleClimateControl()">Off</button>
-          <button id="coolOn" onclick="toggleClimateControl()">Cool</button></tr></td>
+          <td><button id="heatOn" onclick="toggleClimateControlHeat()">Heat</button>
+          <button id="off" onclick="toggleClimateControlOff()">Off</button>
+          <button id="coolOn" onclick="toggleClimateControlCool()">Cool</button></tr></td>
         </tr>
       </table>
       <br/>
@@ -312,7 +320,7 @@
           <td>Modes:</td>
           <!-- Fix onclick function-->
           <td><button id="fan_on" onclick="toggleFan()">On</button>
-          <button id="fan_auto"onclick="toggleFan()">Auto</button></tr></td>
+          <button id="fan_auto" onclick="toggleFan()">Auto</button></tr></td>
         </tr>
       </table>
       <br/>
@@ -333,8 +341,9 @@
         <tr>
           <td>
             <form>
-              <input type="text" name="setTemp">
-              <input type="submit" value="Set Temperature">
+              <input id="tempSet" type="text" name="setTemp">
+              <button id="tempSetButton" onclick="tempSet()">Set Temperature</button>
+              <!-- <input type="submit" value="Set Temperature"> -->
             </form>
           </td>
         </tr>
