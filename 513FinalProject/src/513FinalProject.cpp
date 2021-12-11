@@ -3,16 +3,17 @@
 /******************************************************/
 
 #include "Particle.h"
-#line 1 "/Users/zi/Documents/UofA/ECE513_Final_Project/513FinalProject/src/513FinalProject.ino"
+#line 1 "/Users/zi/Documents/UofA/ECE513FinalProject/513FinalProject/src/513FinalProject.ino"
 #include "Adafruit_DHT.h"
 #include "common.h"
 #include "smartlight.h"
 #include "door.h"
 
+void systemControlCmdProcessing(JSONValue cmdJson);
 void serialCmdProcessing();
 void setup();
 void loop();
-#line 6 "/Users/zi/Documents/UofA/ECE513_Final_Project/513FinalProject/src/513FinalProject.ino"
+#line 6 "/Users/zi/Documents/UofA/ECE513FinalProject/513FinalProject/src/513FinalProject.ino"
 SYSTEM_THREAD(ENABLED);
 // Example testing sketch for various DHT humidity/temperature sensors
 // Written by ladyada, public domain
@@ -25,6 +26,15 @@ DHT dht(DHTPIN, DHTTYPE);
 CSmartLight smartLight;
 CDoor door;
 int counter;
+
+void systemControlCmdProcessing(JSONValue cmdJson) {
+  JSONObjectIterator iter(cmdJson);
+  while (iter.next()) {
+    if (iter.name() == "heat") {
+      digitalWrite(LED2, HIGH);
+    }
+  }
+}
 
 void serialCmdProcessing() {
   if (Serial.available() <= 0) return;
@@ -40,9 +50,12 @@ void serialCmdProcessing() {
       smartLight.cmdProcessing(iter.value());
     } else if (iter.name() == "door") {
       door.cmdProcessing(iter.value());
+    } else if (iter.name() == "systemControl") {
+      systemControlCmdProcessing(iter.value());
     }
   }
 }
+
 
 
 
@@ -87,7 +100,7 @@ void loop() {
 	// float dp = dht.getDewPoint();
 	// float k = dht.getTempKelvin();
 
-	Serial.printf("{\"Humid(Percent)\":%.2f, \"Temp(*C)\":%.2f}", h, temp);
+	Serial.printf("{\"Humid\":%.2f, \"Temp\":%.2f}", h, temp);
 	Serial.println();
 
   unsigned long t = millis();
@@ -96,7 +109,7 @@ void loop() {
   smartLight.execute();
 
   unsigned long period = millis() - t;
-  door.execute();
+  //door.execute();
   if (counter % (SERAIL_COMM_FREQUENCY * LOOP_FREQUENCY) == 0) {
     counter = 0;
     Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"ct\":%ld}",

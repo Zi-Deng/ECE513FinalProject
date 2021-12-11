@@ -89,7 +89,7 @@ void loop() {
 	// float dp = dht.getDewPoint();
 	// float k = dht.getTempKelvin();
 
-	Serial.printf("{\"Humid(Percent)\":%.2f, \"Temp(*C)\":%.2f}", h, temp);
+	Serial.printf("{\"Humid\":%.2f, \"Temp\":%.2f}", h, temp);
 	Serial.println();
 
   unsigned long t = millis();
