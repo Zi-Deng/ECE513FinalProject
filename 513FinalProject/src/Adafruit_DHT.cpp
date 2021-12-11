@@ -149,7 +149,7 @@ boolean DHT::read(void) {
 
 // pull the pin high and wait 250 milliseconds
 	pinSetFast(_pin);
-	delay(250);
+	//delay(250);
 
 // now pull it low for ~20 milliseconds
 	pinMode(_pin, OUTPUT);

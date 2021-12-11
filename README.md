@@ -2,7 +2,7 @@
 
 A Particle project named 513 Final Project
 
-### Team Information
+### Team 11 Information
 Zi Deng - 1st Year PHD ECE - zkdeng@email.arizona.edu
 Parker Dattilo - 4th Year Undergraduate ECE - parkerdattilo@email.arizona.edu
 Ramon Driesen - 1st Year Masters ECE - edriesen@email.arizona.edu
@@ -13,24 +13,24 @@ We are a ECE513 Group.
 http://ec2-18-116-89-134.us-east-2.compute.amazonaws.com:3000/index.html
 
 ### Video Demonstration
-Youtube link to the video demo
+https://www.youtube.com/watch?v=uYM8ej9cJ70&ab_channel=ParkerD
 
 ### Particle Information
-Our Particle Device Information
+We are using an Argon Particle device. Particle ID e00fce6885903bb14139f4eb
 
 ### Implementation Description
 Our particle firmware uses code from the ECE513 smartLightExample code and the Particle Adafruit DHT library example code. In it, we create a C++ class on the functionality that we want to implement onto our device, then create variables and functions to enable the functionality in mind.
 
 Our localhost features use code from the ParticleDeviceControllerUsingWebGUI example from ECE513. We are using node.js to create a local host server that displays html code stylized by css to control our particle device.
 
-Our AWS features use ...
+Our AWS features use token based authentication and password hashing in the database. It also uses 4xx response errors for bad requests or other client side errors related to input data.
 
 ### How to Use
 To use the Particle portion of our repository. Change directories into the Particle firmware directory. From there use VSCode + Particle Workbench to Configure the Particle Project, Compile the project code and the Flash the application.
 
 To use the the localhost features of our repository. Change directories into the WebGUI directory. Use the node package manager to install the serial port package. Then use node to start the JavaScript code to spin up the server.
 
-To use the AWS features...
+To use the AWS features, follow the instructions in the video and the links on the website along with our server state diagram. Essentially, you can make an account, login, create your particle device, and then ping it to see whether or not it is online. For right now, the links are hard-coded for our test case because of an issue reading the values in the database (the values ARE there, but for some reason the url string and the access token generated with the variables was not working when concatenating them with the rest of the url and access token strings)
 
 ## General Particle Project Information
 
