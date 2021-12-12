@@ -93,18 +93,30 @@
             $('#curBrightness').html(data.light.b);
           }
         }
-        //update door status
-        if ("door" in data) {
-          $("#doorstatus").html(data.door);
-        }
-        //update Temp and Humid
+
+        //Update Temp and Humid
         if ("Humid" in data) {
           $("#humid").html(data.Humid);
         }
         if ("Temp" in data) {
-          $("#temp").html(data.Temp);
+          $("#temp").html(convertToFahr(data.Temp));
         }
-
+        //update door status
+        if ("door" in data) {
+          if ("Close" in data.door) {
+            if (data.door.Close === 0) {
+              $("#doorstatus").css("background-color", "white");
+              $("#doorstatus").html("Door is closed");
+            }
+            else {
+              $("#doorstatus").css("background-color", "red");
+              $("#doorstatus").html("Door is opened!");
+            }
+          }
+        }
+        /*if ("System" in data) $("#systemstatus").html(data.System);
+        if ("Fan" in data) $(#fanstatus).html(data.Fan);
+        */
         if ("simclock" in data) $('#curTime').html(data.simclock);
       }
 
@@ -210,7 +222,7 @@
       }
 
       function toggleClimateControlHeat() {
-        //window.alert("FIX toggleClimateControl() function.");
+        window.alert("Climate Control set to HEAT");
         let txcmd = {
           cmd: "write",
           data: {
@@ -221,7 +233,31 @@
         serailCmd(txcmd);
       }
 
+      function toggleClimateControlOff() {
+        window.alert("Climate Control set to OFF");
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: {"off": 1}
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
+      }
+      function toggleClimateControlCool() {
+        window.alert("Climate Control set to COOL");
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: {"cool": 1}
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
+      }
+
       function toggleFanOn() {
+        window.alert("Fan On");
         let txcmd = {
           cmd: "write",
           data: {
@@ -231,6 +267,35 @@
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
+      function toggleFanAuto() {
+        window.alert("Fan Auto");
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: {"fan": 0}
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
+      }
+      function convertToFahr(currTemp) {
+        let newTemp = (parseFloat(currTemp) * (9/5)) + 32;
+        return newTemp;
+      }
+      function tempSet(data, setTemp) {
+        let currTemp = convertToFahr(data.Temp);
+        if (setTemp > currTemp) {
+          //set system mode to cool
+          toggleClimateControlCool();
+        }
+        else if (setTemp < currTemp) {
+          toggleClimateControlHeat();
+        }
+        else {
+          toggleClimateControlOff();
+        }
+      }
+
 
 
 </script>
@@ -302,7 +367,14 @@
           <td>Present brightness:</td>
           <td><div id="curBrightness" style="width: 100%; height:100%;"></div></td>
         </tr>
-
+      </table>
+      <table>
+        <td>
+          <div>
+            <input type="color" id="cp" name="ColorPicker" value="#e66465">
+            <label for="ColorPicker">Color Picker</label>
+          </div>
+        </td>
       </table>
       <br/>
       <table>
@@ -313,8 +385,6 @@
           <td>
             <span id="doorstatus"></span>
           </td>
-
-
         </tr>
       </table>
       <br/>
@@ -339,7 +409,19 @@
           <td>Modes:</td>
           <!-- Fix onclick function-->
           <td><button id="fan_on" onclick="toggleFanOn()">On</button>
-          <button id="fan_auto" onclick="toggleFan()">Auto</button></tr></td>
+          <button id="fan_auto" onclick="toggleFanAuto()">Auto</button></tr></td>
+        </tr>
+      </table>
+      <br/>
+      <table>
+        <tr>
+          <th colspan="4">System and Fan Status</th>
+        </tr>
+        <tr>
+          <td>System Status:</td>
+          <td><div id="systemstatus"></div></td>
+          <td>Fan Status:</td>
+          <td><div id="fanstatus"></div></td>
         </tr>
       </table>
       <br/>
@@ -348,22 +430,19 @@
           <th colspan="4">Temperature and Humidity</th>
         </tr>
         <tr>
-          <td>Temperature:</td>
+          <td>Temperature (F):</td>
           <!-- Add temperature display onclick function-->
           <td><span id="temp"></span></td>
         </tr>
         <tr>
-          <td>Humidity:</td>
+          <td>Humidity (%):</td>
           <td><span id="humid"></span></td>
           <!-- Add humidity display onclick function-->
         </tr>
         <tr>
           <td>
-            <form>
-              <input id="tempSet" type="text" name="setTemp">
-              <button id="tempSetButton" onclick="tempSet()">Set Temperature</button>
-              <!-- <input type="submit" value="Set Temperature"> -->
-            </form>
+            <input id="tempSet" type="text" name="setTemp">
+            <button id="tempSetButton" onclick="tempSet()">Set Temperature</button>
           </td>
         </tr>
       </table>
