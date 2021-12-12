@@ -11,15 +11,12 @@
 #include "thermostat.h"
 
 void serialCmdProcessing();
+void myWebhookHandler(const char *event, const char *data);
 void setup();
 void loop();
 #line 7 "/Users/zi/Documents/UofA/ECE513FinalProject/513FinalProject/src/513FinalProject.ino"
 SYSTEM_THREAD(ENABLED);
-// Example testing sketch for various DHT humidity/temperature sensors
-// Written by ladyada, public domain
-
 #define DHTPIN 2     // what pin we're connected to
-
 #define DHTTYPE DHT11		// DHT 11
 
 DHT dht(DHTPIN, DHTTYPE);
@@ -27,6 +24,35 @@ CSmartLight smartLight;
 CDoor door;
 CThermostat thermostat;
 int counter;
+String finalStatusStr;
+//bool bPublish;
+//String rxCloudCmdStr;
+
+
+// int updateRxCmd(String cmdStr) {
+//   rxCloudCmdStr = cmdStr;
+//   return 0;
+// }
+
+// void cloudCmdProcessing() {
+//   if (rxCloudCmdStr == "") return;
+//   JSONValue cmdJson = JSONValue::parseCopy(rxCloudCmdStr);
+//   JSONObjectIterator iter(cmdJson);
+//   while (iter.next()) {
+//     if (iter.name()) {
+//       if (iter.name() == "publish") {
+//         bPublish = iter.value().toBool();
+//       } else if (iter.name() == "smartlight") {
+//         smartLight.cmdProcessing(iter.value());
+//       } else if (iter.name() == "door") {
+//         door.cmdProcessing(iter.value());
+//       } else if (iter.name() == "systemControl") {
+//         thermostat.cmdProcessing(iter.value());
+//       }
+//     }
+//   }
+//   rxCloudCmdStr = "";
+// }
 
 void serialCmdProcessing() {
   if (Serial.available() <= 0) return;
@@ -48,8 +74,10 @@ void serialCmdProcessing() {
   }
 }
 
-
-
+void myWebhookHandler(const char *event, const char *data) {
+  String output = String::format("Response: %s", data);
+  Serial.println(output);
+}
 
 void setup() {
   pinMode(LED, OUTPUT);
@@ -62,28 +90,23 @@ void setup() {
   dht.begin();
 
   counter = 0;
+
+  // bPublish = false;
+  // rxCloudCmdStr = "";
+  finalStatusStr = "";
+
+  // Particle.function("cloundcmd", updateRxCmd);
+  // Particle.subscribe("hook-response/smarthome", myWebhookHandler);
 }
 
 void loop() {
-// Wait a few seconds between measurements.
-	//delay(100);
+  unsigned long t = millis();
+  //cloudCmdProcessing();
+
 
 	float h = dht.getHumidity();
-// Read temperature as Celsius
 	float temp = dht.getTempCelcius();
-// Read temperature as Farenheit
 	float f = dht.getTempFarenheit();
-
-// Check if any reads failed and exit early (to try again).
-// Compute heat index
-// Must send in temp in Fahrenheit!
-	// float hi = dht.getHeatIndex();
-	// float dp = dht.getDewPoint();
-	// float k = dht.getTempKelvin();
-
-
-
-  unsigned long t = millis();
 
   serialCmdProcessing();
   smartLight.execute();
@@ -95,17 +118,24 @@ void loop() {
   if (counter % (SERAIL_COMM_FREQUENCY * LOOP_FREQUENCY) == 0) {
     counter = 0;
     if (isnan(h) || isnan(temp) || isnan(f)) {
-      //Serial.println("Failed to read from DHT sensor!");
       Serial.printf("{\"Fail\": %d}", true);
       Serial.println();
 
       return;
     }
-    Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
+
+    finalStatusStr = String::format("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
       (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), thermostat.getStatusStr().c_str(), h, temp,
-      period
-    );
+      period);
+
+    // Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
+    //   (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), thermostat.getStatusStr().c_str(), h, temp,
+    //   period
+    // );
+    Serial.printf(finalStatusStr);
     Serial.println();
+
+    //Particle.publish("smarthome", finalStatusStr, PRIVATE);
   }
   counter++;
 
