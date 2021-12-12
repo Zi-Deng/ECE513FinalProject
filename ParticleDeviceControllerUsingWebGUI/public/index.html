@@ -114,7 +114,8 @@
             }
           }
         }
-        /*if ("System" in data) $("#systemstatus").html(data.System);
+        /*
+        if ("System" in data) $("#systemstatus").html(data.System);
         if ("Fan" in data) $(#fanstatus).html(data.Fan);
         */ 
         if ("simclock" in data) $('#curTime').html(data.simclock);
@@ -226,7 +227,7 @@
         let txcmd = {
           cmd: "write",
           data: {
-            systemControl: {"heat": 1, "cool": 0}
+            systemControl: {"heat": 1}
           }
         }
         console.log(JSON.stringify(txcmd));
@@ -238,7 +239,7 @@
         let txcmd = {
           cmd: "write",
           data: {
-            systemControl: {"heat": 0, "cool": 0}
+            systemControl: {"off": 1}
           }
         }
         console.log(JSON.stringify(txcmd));
@@ -249,7 +250,7 @@
         let txcmd = {
           cmd: "write",
           data: {
-            systemControl: {"heat": 0, "cool": 1}
+            systemControl: {"cool": 1}
           }
         }
         console.log(JSON.stringify(txcmd));
@@ -261,7 +262,7 @@
         let txcmd = {
           cmd: "write",
           data: {
-            fanControl: {"on": 1, "auto": 0}
+            fanControl: {"fan": 1}
           }
         }
         console.log(JSON.stringify(txcmd));
@@ -272,7 +273,7 @@
         let txcmd = {
           cmd: "write",
           data: {
-            fanControl: {"on": 0, "auto": 1}
+            fanControl: {"fan": 0}
           }
         }
         console.log(JSON.stringify(txcmd));
@@ -284,16 +285,7 @@
       }
       function tempSet(data, setTemp) {
         let currTemp = convertToFahr(data.Temp);
-        if (setTemp > currTemp) {
-          //set system mode to cool
-          toggleClimateControlCool();
-        }
-        else if (setTemp < currTemp) {
-          toggleClimateControlHeat();
-        } 
-        else {
-          toggleClimateControlOff();
-        }
+        
       }
 
 
