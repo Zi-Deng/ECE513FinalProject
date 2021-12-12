@@ -114,6 +114,9 @@
             }
           }
         }
+        /*if ("System" in data) $("#systemstatus").html(data.System);
+        if ("Fan" in data) $(#fanstatus).html(data.Fan);
+        */ 
         if ("simclock" in data) $('#curTime').html(data.simclock);
       }
 
@@ -407,6 +410,18 @@
           <!-- Fix onclick function-->
           <td><button id="fan_on" onclick="toggleFanOn()">On</button>
           <button id="fan_auto" onclick="toggleFanAuto()">Auto</button></tr></td>
+        </tr>
+      </table>
+      <br/>
+      <table>
+        <tr>
+          <th colspan="4">System and Fan Status</th>
+        </tr>
+        <tr>
+          <td>System Status:</td>
+          <td><div id="systemstatus"></div></td>
+          <td>Fan Status:</td>
+          <td><div id="fanstatus"></div></td>
         </tr>
       </table>
       <br/>
