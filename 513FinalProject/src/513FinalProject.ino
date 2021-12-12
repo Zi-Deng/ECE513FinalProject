@@ -18,15 +18,6 @@ CDoor door;
 CThermostat thermostat;
 int counter;
 
-// void systemControlCmdProcessing(JSONValue cmdJson) {
-//   JSONObjectIterator iter(cmdJson);
-//   while (iter.next()) {
-//     if (iter.name() == "heat") {
-//       digitalWrite(LED2, HIGH);
-//     }
-//   }
-// }
-
 void serialCmdProcessing() {
   if (Serial.available() <= 0) return;
   String cmdStr = "";
@@ -86,19 +77,20 @@ void loop() {
 
   serialCmdProcessing();
   smartLight.execute();
-
-  unsigned long period = millis() - t;
+  thermostat.execute(temp);
   //door.execute();
+  unsigned long period = millis() - t;
+
 
   if (counter % (SERAIL_COMM_FREQUENCY * LOOP_FREQUENCY) == 0) {
     counter = 0;
-    // if (isnan(h) || isnan(temp) || isnan(f)) {
-    //   //Serial.println("Failed to read from DHT sensor!");
-    //   Serial.printf("{\"Fail\": %d}", true);
-    //   Serial.println();
+    if (isnan(h) || isnan(temp) || isnan(f)) {
+      //Serial.println("Failed to read from DHT sensor!");
+      Serial.printf("{\"Fail\": %d}", true);
+      Serial.println();
 
-    //   return;
-    // }
+      return;
+    }
     Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
       (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), thermostat.getStatusStr().c_str(), h, temp,
       period

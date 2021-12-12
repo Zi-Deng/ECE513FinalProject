@@ -38,7 +38,6 @@ void CSmartLight::execute() {
             turnOffLight();
             if (cmd.On != INVALID_CMD) {
                 if (cmd.On) {
-                    /* [6] Your code here */
                     state_L0 = CSmartLight::S_ON;
                     state_L1 = CSmartLight::S_MANUAL;
                 }
@@ -65,6 +64,7 @@ void CSmartLight::execute() {
             }
             if (cmd.On != INVALID_CMD) {
                 /* [11] Your code here */
+                if (!cmd.On) state_L0 = CSmartLight::S_OFF;
             }
             break;
         default:

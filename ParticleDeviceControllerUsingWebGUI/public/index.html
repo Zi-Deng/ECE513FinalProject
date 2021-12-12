@@ -221,8 +221,15 @@
         serailCmd(txcmd);
       }
 
-      function toggleFan() {
-        window.alert("FIX toggleFan() funciton.");
+      function toggleFanOn() {
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: {"fan": 1}
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
       }
 
 
@@ -331,7 +338,7 @@
         <tr>
           <td>Modes:</td>
           <!-- Fix onclick function-->
-          <td><button id="fan_on" onclick="toggleFan()">On</button>
+          <td><button id="fan_on" onclick="toggleFanOn()">On</button>
           <button id="fan_auto" onclick="toggleFan()">Auto</button></tr></td>
         </tr>
       </table>
