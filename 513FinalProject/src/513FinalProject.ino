@@ -75,22 +75,13 @@ void loop() {
 	float f = dht.getTempFarenheit();
 
 // Check if any reads failed and exit early (to try again).
-	if (isnan(h) || isnan(temp) || isnan(f)) {
-		//Serial.println("Failed to read from DHT sensor!");
-		Serial.printf("{\"Fail\": %d}", true);
-		Serial.println();
-
-		return;
-	}
-
 // Compute heat index
 // Must send in temp in Fahrenheit!
 	// float hi = dht.getHeatIndex();
 	// float dp = dht.getDewPoint();
 	// float k = dht.getTempKelvin();
 
-	Serial.printf("{\"Humid\":%.2f, \"Temp\":%.2f}", h, temp);
-	Serial.println();
+
 
   unsigned long t = millis();
 
@@ -101,8 +92,19 @@ void loop() {
   //door.execute();
   if (counter % (SERAIL_COMM_FREQUENCY * LOOP_FREQUENCY) == 0) {
     counter = 0;
-    Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"ct\":%ld}",
-      (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(),
+    if (isnan(h) || isnan(temp) || isnan(f)) {
+      //Serial.println("Failed to read from DHT sensor!");
+      Serial.printf("{\"Fail\": %d}", true);
+      Serial.println();
+
+      return;
+    }
+
+    // Serial.printf("{\"Humid\":%.2f, \"Temp\":%.2f}", h, temp);
+    // Serial.println();
+
+    Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
+      (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), h, temp,
       period
     );
     Serial.println();
