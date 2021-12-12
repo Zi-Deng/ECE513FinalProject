@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Account Management</title>
+        <link href="stylesheets/style.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="javascripts/updateInfo.js"></script>
+    </head>
+    <body onload="organizePage()">
+        <!-- change so its not a form, add button instead--> 
+        <div class="navigation">
+            <button onclick="location.href='home.html'">Home</button>
+        </div>
+        <h1>UPDATE ACCOUNT INFORMATION</h1>
+        <div id="updateInfo">
+            <label for="password">Enter Current Password:</label>
+            <input type="password" id="curPassword" placeholder="password" name="password"><br>
+            <label for="password">Enter New Password:</label>
+            <input type="password" id="newPassword" placeholder="password" name="password">
+            <div id="strengthMessage"></div><br>
+            <label for="zip">Enter Zip:</label>
+            <input type="text" id="zip" placeholder="12345" name="zip"><br>
+            <label for="devices">Remove a device?</label>
+            <select id="devices"></select>
+            <button id="devSel" onclick="removeDev()">Remove Device</button><br>
+            <button id="submit">Update</button>
+        </div>
+        <div id="rxData" class="errorResponse">
+        </div>
+    </body>
+</html>
