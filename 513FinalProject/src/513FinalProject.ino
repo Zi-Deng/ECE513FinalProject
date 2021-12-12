@@ -2,6 +2,7 @@
 #include "common.h"
 #include "smartlight.h"
 #include "door.h"
+#include "thermostat.h"
 
 SYSTEM_THREAD(ENABLED);
 // Example testing sketch for various DHT humidity/temperature sensors
@@ -14,16 +15,17 @@ SYSTEM_THREAD(ENABLED);
 DHT dht(DHTPIN, DHTTYPE);
 CSmartLight smartLight;
 CDoor door;
+CThermostat thermostat;
 int counter;
 
-void systemControlCmdProcessing(JSONValue cmdJson) {
-  JSONObjectIterator iter(cmdJson);
-  while (iter.next()) {
-    if (iter.name() == "heat") {
-      digitalWrite(LED2, HIGH);
-    }
-  }
-}
+// void systemControlCmdProcessing(JSONValue cmdJson) {
+//   JSONObjectIterator iter(cmdJson);
+//   while (iter.next()) {
+//     if (iter.name() == "heat") {
+//       digitalWrite(LED2, HIGH);
+//     }
+//   }
+// }
 
 void serialCmdProcessing() {
   if (Serial.available() <= 0) return;
@@ -40,7 +42,7 @@ void serialCmdProcessing() {
     } else if (iter.name() == "door") {
       door.cmdProcessing(iter.value());
     } else if (iter.name() == "systemControl") {
-      systemControlCmdProcessing(iter.value());
+      thermostat.cmdProcessing(iter.value());
     }
   }
 }
@@ -65,9 +67,6 @@ void loop() {
 // Wait a few seconds between measurements.
 	//delay(100);
 
-// Reading temperature or humidity takes about 250 milliseconds!
-// Sensor readings may also be up to 2 seconds 'old' (its a
-// very slow sensor)
 	float h = dht.getHumidity();
 // Read temperature as Celsius
 	float temp = dht.getTempCelcius();
@@ -90,21 +89,18 @@ void loop() {
 
   unsigned long period = millis() - t;
   //door.execute();
+
   if (counter % (SERAIL_COMM_FREQUENCY * LOOP_FREQUENCY) == 0) {
     counter = 0;
-    if (isnan(h) || isnan(temp) || isnan(f)) {
-      //Serial.println("Failed to read from DHT sensor!");
-      Serial.printf("{\"Fail\": %d}", true);
-      Serial.println();
+    // if (isnan(h) || isnan(temp) || isnan(f)) {
+    //   //Serial.println("Failed to read from DHT sensor!");
+    //   Serial.printf("{\"Fail\": %d}", true);
+    //   Serial.println();
 
-      return;
-    }
-
-    // Serial.printf("{\"Humid\":%.2f, \"Temp\":%.2f}", h, temp);
-    // Serial.println();
-
-    Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
-      (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), h, temp,
+    //   return;
+    // }
+    Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
+      (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), thermostat.getStatusStr().c_str(), h, temp,
       period
     );
     Serial.println();

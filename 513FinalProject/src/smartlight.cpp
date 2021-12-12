@@ -47,19 +47,15 @@ void CSmartLight::execute() {
         case CSmartLight::S_ON:
             switch (state_L1) {
                 case CSmartLight::S_MANUAL:
-                    /* [7] Your code here */
                     updateBrightnessManually(cmd.Brightness);
                     if (cmd.Auto != INVALID_CMD) {
-                        /* [8] Your code here */
                         if (cmd.Auto) state_L1 = CSmartLight::S_AUTO;
                     }
                     break;
 
                 case CSmartLight::S_AUTO:
-                    /* [9] Your code here */
                     updataBrightnessAutomatically();
                     if (cmd.Auto != INVALID_CMD) {
-                        /* [10] Your code here */
                         if (!cmd.Auto) state_L1 = CSmartLight::S_MANUAL;
                     }
                     break;
