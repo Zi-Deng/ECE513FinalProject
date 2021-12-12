@@ -279,6 +279,20 @@
         let newTemp = (parseFloat(currTemp) * (9/5)) + 32;
         return newTemp;
       }
+      function tempSet(data, setTemp) {
+        let currTemp = convertToFahr(data.Temp);
+        if (setTemp > currTemp) {
+          //set system mode to cool
+          toggleClimateControlCool();
+        }
+        else if (setTemp < currTemp) {
+          toggleClimateControlHeat();
+        } 
+        else {
+          toggleClimateControlOff();
+        }
+      }
+
 
 
 </script>
