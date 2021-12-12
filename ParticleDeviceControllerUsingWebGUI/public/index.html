@@ -93,18 +93,20 @@
             $('#curBrightness').html(data.light.b);
           }
         }
-        //update door status
-        if ("door" in data) {
-          $("#doorstatus").html(data.door);
-        }
-        //update Temp and Humid
+        
+        //Update Temp and Humid
         if ("Humid" in data) {
           $("#humid").html(data.Humid);
         }
         if ("Temp" in data) {
           $("#temp").html(data.Temp);
         }
-
+        //update door status
+        if ("door" in data) {
+          if ("Close" in data.door) {
+            $("#doorstatus").html(data.door.Close);
+          }
+        }
         if ("simclock" in data) $('#curTime').html(data.simclock);
       }
 
@@ -214,7 +216,30 @@
         let txcmd = {
           cmd: "write",
           data: {
-            systemControl: {"heat": 1}
+            systemControl: {"heat": 1, "cool": 0}
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
+      }
+
+      function toggleClimateControlOff() {
+        //window.alert("FIX toggleClimateControl() function.");
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: {"heat": 0, "cool": 0}
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
+      }
+      function toggleClimateControlCool() {
+        //window.alert("FIX toggleClimateControl() function.");
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: {"heat": 0, "cool": 1}
           }
         }
         console.log(JSON.stringify(txcmd));
@@ -222,7 +247,15 @@
       }
 
       function toggleFan() {
-        window.alert("FIX toggleFan() funciton.");
+        //window.alert("FIX toggleFan() funciton.");
+        let txcmd = {
+          cmd: "write",
+          data: {
+            
+          }
+        }
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
       }
 
 
