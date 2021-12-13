@@ -18,23 +18,24 @@ void CSmartLight::cmdProcessing(JSONValue cmdJson) {
     while (iter.next()) {
         if (iter.name() == "on") {
             cmd.On = (int)iter.value().toBool();
-        }
-        else if (iter.name() == "auto") {
+        } else if (iter.name() == "auto") {
             cmd.Auto = (int)iter.value().toBool();
-        }
-        else if (iter.name() == "brightness") {
+        } else if (iter.name() == "brightness") {
             cmd.Brightness = iter.value().toInt();
-        }
-        else if (iter.name() == "min") {
+        } else if (iter.name() == "min") {
             sensorMin = iter.value().toInt();
-        }
-        else if ( iter.name() == "max") {
+        } else if ( iter.name() == "max") {
             sensorMax = iter.value().toInt();
-        }
-        else if (iter.name() == "sleepTime") {
+        } else if (iter.name() == "sleepTime") {
             sleepTime = iter.value().toInt();
         } else if (iter.name() == "wakeTime") {
             wakeTime = iter.value().toInt();
+        } else if (iter.name() == "red") {
+            red = iter.value().toInt();
+        } else if (iter.name() == "green") {
+            green = iter.value().toInt();
+        } else if (iter.name() == "blue") {
+            blue = iter.value().toInt();
         }
     }
 }
@@ -47,6 +48,7 @@ void CSmartLight::execute() {
         brightness = 0;
         RGB.brightness(brightness);
     }
+    RGB.color(red, green, blue);
     switch (state_L0) {
         case CSmartLight::S_OFF:
             turnOffLight();
@@ -139,6 +141,6 @@ int CSmartLight::getSensorVal() {
 void CSmartLight::createStatusStr() {
     //time_t ti = Time.now();
     //std::time_t result = std::time(nullptr);
-    statusStr = String::format("{\"L0\":%d,\"L1\":%d,\"b\":%d,\"s\":%d,\"m\":%d,\"M\":%d}",
-        state_L0, state_L1, (int)((double)brightness/RGB_BRIGHTNESS_MAX*100.0), sensorVal, sensorMin, sensorMax);
+    statusStr = String::format("{\"L0\":%d,\"L1\":%d,\"b\":%d,\"s\":%d,\"m\":%d,\"M\":%d,\"red\":%d}",
+        state_L0, state_L1, (int)((double)brightness/RGB_BRIGHTNESS_MAX*100.0), sensorVal, sensorMin, sensorMax, red);
 }
