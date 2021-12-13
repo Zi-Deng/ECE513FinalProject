@@ -13,7 +13,9 @@ We are a ECE513 Group.
 http://ec2-18-116-89-134.us-east-2.compute.amazonaws.com:3000/index.html
 
 ## Video Demonstration
+AWS
 https://www.youtube.com/watch?v=keiGQiL5zdw
+LocalHost
 https://www.youtube.com/watch?v=aHX9m14uYYE
 
 ## Particle Information
