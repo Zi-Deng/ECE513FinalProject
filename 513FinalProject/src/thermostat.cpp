@@ -32,6 +32,7 @@ void CThermostat::execute(float currTemp) {
     case CThermostat::S_HEAT:
       if (currTemp > thermoStruct.assignedTemp) {
         thermoStruct.heat = 0;
+        thermoStruct.cool = 0;
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
           thermoStruct.powerConsumption = 600;
@@ -41,6 +42,7 @@ void CThermostat::execute(float currTemp) {
         }
       } else if (currTemp < thermoStruct.assignedTemp) {
         thermoStruct.heat = 1;
+        thermoStruct.cool = 0;
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
           thermoStruct.powerConsumption = 4400;
@@ -52,6 +54,7 @@ void CThermostat::execute(float currTemp) {
       break;
     case CThermostat::S_COOL:
       if (currTemp > thermoStruct.assignedTemp) {
+        thermoStruct.heat = 0;
         thermoStruct.cool = 1;
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
@@ -61,6 +64,7 @@ void CThermostat::execute(float currTemp) {
           thermoStruct.powerConsumption =3700;
         }
       } else if (currTemp < thermoStruct.assignedTemp) {
+        thermoStruct.heat = 0;
         thermoStruct.cool = 0;
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
