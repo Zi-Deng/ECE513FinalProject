@@ -30,6 +30,23 @@ function organizePage(){
             $(document.body).append('<div id="temp">Please register a device with the button at the top right of the screen</div>')
         }
     })
+
+    $.ajax({
+        url: "/user/zip",
+        method: 'GET',
+        dataType: 'json',
+        headers: { 'x-auth' : window.localStorage.getItem("token") },
+        success: function(data){
+            $.ajax({
+                url: "https://api.openweathermap.org/data/2.5/weather?zip="+JSON.stringify(data.message,null,2).replace(/\"/g, "")+",us&appid=34b5fb11be45ecd36e56776c0b040089&mode=html&units=metric",
+                method: 'GET',
+                dataType: 'html'
+            })
+            .done(function(data, textStatus, errorThrown){
+                $("#weather").html(data)
+            })
+        }
+    })
 }
 
 function clock(){
@@ -105,7 +122,7 @@ $.ajax({
     data: JSON.stringify(cmd),
     dataType: 'json',
     headers: { 'x-auth' : window.localStorage.getItem("token") }
-}).done(particleSuccess).fail(particleFailure);
+}).done(particleSuccess).fail(particleFailure)
 }
 
 function particleSuccess(data, textStatus, jqXHR) {
@@ -115,14 +132,41 @@ if ("cmd" in data) {
         if ("online" in data.data) {
             if (data.data.online) {
             $('#ping_status').val('Online');
+            $('#ping').html("Ping status is: Online");
             }
-            else $('#ping_status').val('Offline');
+            else {$('#ping_status').val('Offline'); $('#ping').html("Ping status is: Offline");}
         }
     }
     else if (data.cmd === "read") {
         if ("simclock" in data.data) $('#curTime').html(data.data.simclock);
+
+        if(data.data.door.Close == 1) $('#door').html("Door is: Closed");
+        else $('#door').html("Door is: Open");
+
+        $("#temperature").html("Temperature is: " + data.data.Temp + " degrees Celcius")
+        $("#humid").html("Humidity is: " + data.data.Humid + "%")
+        $("#power").html("Current power is: " + data.data.thermostat.power + " W/hr")
+
+        $.ajax({
+            url: '/user/therm',
+            method: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({time: data.data.simclock, temp: data.data.Temp, humid: data.data.Humid, power: data.data.thermostat.power}),
+            dataType: 'json',
+            headers: {'x-auth' : window.localStorage.getItem("token")}
+        }).done()
+
+        $.ajax({
+            url: '/particle/publish',
+            method: 'POST',
+            contentType: 'application/json',
+           // data: JSON.stringify(cmd),
+            dataType: 'json',
+            headers: { 'x-auth' : window.localStorage.getItem("token") },
+        })
     }
     else if ((data.cmd === "publish") && (data.success)){
+        $("#publish").html("Publish status is: Online")
         if ($('#btnEnablePublish').html() == 'Enable publish') {
             $('#btnEnablePublish').html('Disable publish'); 
             myInterval = setInterval(readData, 1000);
@@ -140,4 +184,56 @@ if ("cmd" in data) {
 
 function particleFailure(jqXHR, textStatus, errorThrown) {
 $('#cmdStatusData').html(JSON.stringify(jqXHR, null, 2));
+}
+
+function drawGraph() {
+    const labels1 = []
+    $.ajax({
+        url: '/particle/publish',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(cmd),
+        dataType: 'json',
+        headers: { 'x-auth' : window.localStorage.getItem("token") }
+    })
+    const data1 = {
+        labels: labels,
+        datasets: [{
+            label: 'Sensor Reading',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+    };
+    const data2 = {
+        labels: labels,
+        datasets: [{
+            label: 'Sensor Reading',
+            backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [100, 110, 115, 112, 120, 130, 145],
+        }]
+    };
+    const config1 = {
+        type: 'line',
+        data: data1,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    };
+    const config2 = {
+        type: 'line',
+        data: data2,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    };
+    var myChart1 = new Chart(document.getElementById('myChart1'), config1);
+    var myChart2 = new Chart(document.getElementById('myChart2'), config2);
+    //var myChart3 = new Chart(document.getElementById('myChart3'), config1);
+    //var myChart4 = new Chart(document.getElementById('myChart4'), config1);
+    //var myChart5 = new Chart(document.getElementById('myChart5'), config1);
+
 }

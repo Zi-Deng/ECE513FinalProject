@@ -4,6 +4,7 @@ var User = require("../models/user_model");
 const jwt = require("jwt-simple");
 const bcrypt = require("bcryptjs");
 const fs = require('fs');
+const { route } = require('.');
 secret = fs.readFileSync(__dirname + "/../keys/jwtkey").toString()
 //login
 router.post('/login', function(req, res, next) {
@@ -198,5 +199,76 @@ router.post("/update", function(req, res, next){
     res.status(400).json({success: false, message: ex})
   }
 });
+router.post('/therm', function(req,res,next){
+  //time: Date, temp: Number, humidity: Number, power: Number 
+  let data={
+    time: req.body.time,
+    temp: req.body.temp,
+    humidity: req.body.humid,
+    power: req.body.power
+  }
+  try{
+    const token = req.headers["x-auth"];
+    const userDecoded = jwt.decode(token, secret).username;
+    User.findOneAndUpdate({username: userDecoded}, {$push: {readings: data}}, function(err, user){
+      if(err){
+        res.status(400).json({message: userDecoded, err: err})
+      }
+      else if(!user){
+        res.status(400).json({message: "User authentication error, you are not permitted to register this device"})
+      }
+      else{ 
+        res.status(200).json({message: user.zip});
+      }
+    });
+    }
+    catch(ex){
+      res.status(401).json({success: false, message: ex})
+    }
+});
+
+router.get('/zip', function(req, res, next){
+  try{
+  const token = req.headers["x-auth"];
+  const userDecoded = jwt.decode(token, secret).username;
+  User.findOne({username: userDecoded}, function(err, user){
+    if(err){
+      res.status(400).json({message: userDecoded, err: err})
+    }
+    else if(!user){
+      res.status(400).json({message: "User authentication error, you are not permitted to register this device"})
+    }
+    else{ 
+      res.status(200).json({message: user.zip});
+    }
+  });
+  }
+  catch(ex){
+    res.status(401).json({success: false, message: ex})
+  }
+
+})
+
+// route.get('/graphTemp', function(req, res, err){
+//   try{
+//     const token = req.headers["x-auth"];
+//     const userDecoded = jwt.decode(token, secret).username;
+//     User.findOne({username: userDecoded}, function(err, user){
+//       if(err){
+//         res.status(400).json({message: userDecoded, err: err})
+//       }
+//       else if(!user){
+//         res.status(400).json({message: "User authentication error, you are not permitted to register this device"})
+//       }
+//       else{ 
+//         res.status(200).json({message: user.readings});
+//       }
+//     });
+//     }
+//     catch(ex){
+//       res.status(401).json({success: false, message: ex})
+//     }
+  
+// })
 
 module.exports = router;

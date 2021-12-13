@@ -5,7 +5,7 @@ var User = db.model("User", {
     password:  String,
     devices:  [{id : String, name: String, token : String}],
     zip: Number,
-    readings: [{time: Date, temp: Number, humidity: Number }]
+    readings: [{time: Date, temp: Number, humidity: Number, power: Number }]
  });
 
  module.exports = User;
