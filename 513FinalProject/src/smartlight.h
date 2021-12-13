@@ -39,6 +39,12 @@ private:
     int sensorVal;
     int sensorMax;
     int sensorMin;
+    int wakeTime = 30;
+    int sleepTime = 1320;
+    int red;
+    int green;
+    int blue;
+    //spark::JSONString color;
     SmartLightCmdStruct cmd;
     String statusStr;
 };

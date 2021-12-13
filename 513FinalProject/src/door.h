@@ -9,7 +9,7 @@ struct DoorCmdStruct {
 };
 
 class CDoor {
-  enum STATE_D0 { S_OPEN, S_CLOSED};
+  enum STATE_D0 { S_OPEN, S_CLOSED, S_ALERT };
 
   public:
     CDoor();
@@ -24,8 +24,6 @@ class CDoor {
 
   private:
     void resetCmd();
-    void monitorDoor();
-    void sendAlert();
     void createStatusStr();
 
     STATE_D0 state_D0;
@@ -36,6 +34,7 @@ class CDoor {
     int oldTime;
     int newTime;
     DoorCmdStruct cmd;
+    int alert;
     String statusStr;
 
 };

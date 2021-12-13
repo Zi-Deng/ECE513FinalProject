@@ -35,12 +35,10 @@ void CDoor::execute() {
       if (curSensorVal > sensorMax) curSensorVal = sensorMax;
       double amountOfProximity = (double)(curSensorVal-sensorMin) / (double)(sensorMax-sensorMin);
       if (amountOfProximity < 0.5) {
-        //RGB.brightness(RGB_BRIGHTNESS_MAX);
         digitalWrite(LED2, HIGH);
         oldTime = Time.now();
         state_D0 = CDoor::S_OPEN;
       } else {
-        RGB.brightness(0);
         digitalWrite(LED2, LOW);
       }}
       break;
@@ -53,21 +51,37 @@ void CDoor::execute() {
       doorProximity = amountOfProximity;
 
       newTime = Time.now();
-      if (newTime - oldTime > 10) {
-        Serial.printf("{\"alert\": %d}", true);
-        Serial.println();
-      }
+
       if (amountOfProximity < 0.5) {
-        //RGB.brightness(RGB_BRIGHTNESS_MAX);
         digitalWrite(LED2, HIGH);
+        if (newTime - oldTime > 10) {
+          state_D0 = CDoor::S_ALERT;
+        } else {
+          state_D0 = CDoor::S_OPEN;
+        }
       } else {
-        //RGB.brightness(0);
         digitalWrite(LED2, LOW);
         oldTime = Time.now();
         state_D0 = CDoor::S_CLOSED;
       }
     }
       break;
+    case CDoor::S_ALERT: {
+      readSensorVal();
+      int curSensorVal = getSensorVal();
+      if (curSensorVal < sensorMin) curSensorVal = sensorMin;
+      if (curSensorVal > sensorMax) curSensorVal = sensorMax;
+      double amountOfProximity = (double)(curSensorVal-sensorMin) / (double)(sensorMax-sensorMin);
+      doorProximity = amountOfProximity;
+
+      if (amountOfProximity < 0.5) {
+        digitalWrite(LED2, HIGH);
+      } else {
+        digitalWrite(LED2, LOW);
+        state_D0 = CDoor::S_CLOSED;
+      }
+      break;
+    }
     default:
       break;
   }

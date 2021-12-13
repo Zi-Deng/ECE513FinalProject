@@ -90,11 +90,11 @@
           if ("s" in data.light) $("#sensorVal").html( data.light.s);
           if ("b" in data.light) {
             //$('#curBrightness').css("background-color", `hsl(61, ${data.light.b}%, 50%)`);
-            $("#curBrightness").css("background-color", "#ColorPicker");
+            //$("#curBrightness").css("background-color", "#ColorPicker");
             $('#curBrightness').html(data.light.b);
           }
         }
-        
+
         //Update Temp and Humid
         if ("Humid" in data) {
           $("#humid").html(data.Humid);
@@ -108,11 +108,15 @@
           if ("Close" in data.door) {
             if (data.door.Close === 0) {
               $("#doorstatus").css("background-color", "white");
+              $("#doorstatus").html("Door is open!");
+            }
+            else if (data.door.Close === 1) {
+              $("#doorstatus").css("background-color", "white");
               $("#doorstatus").html("Door is closed");
             }
-            else {
+            else if (data.door.Close === 2) {
               $("#doorstatus").css("background-color", "red");
-              $("#doorstatus").html("Door is opened!");
+              $("#doorstatus").html("Door is opened for a long while!");
             }
           }
         }
@@ -140,10 +144,10 @@
               $("#fanstatus").html("ON");
             }
             else {
-              $("#fanstatus").html("AUTO");
+              $("#fanstatus").html("OFF");
             }
           }
-        } 
+        }
         if ("simclock" in data) $('#curTime').html(data.simclock);
       }
 
@@ -222,6 +226,29 @@
             myInterval = null;
           }
         }
+      }
+      function hexToRgb(hex) {
+        var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        return result ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+      }
+      function lightColorControl(value) {
+        $("#curBrightness").css("background-color", value);
+        let txcmd = {
+          cmd: "write",
+          data: {
+            smartlight: { }
+          }
+        };
+        var rgbColors = hexToRgb(value);
+        txcmd.data.smartlight["red"] = rgbColors.r;
+        txcmd.data.smartlight["green"] = rgbColors.g;
+        txcmd.data.smartlight["blue"] = rgbColors.b;
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
       }
 
       function smartLightControl(option, value) {
@@ -381,14 +408,14 @@
         <tr>
           <td>Sensor Val:</td>
           <td><span id="sensorVal"></span></td>
-          <td>Present brightness:</td>
+          <td>Present color/brightness value:</td>
           <td><div id="curBrightness" style="width: 100%; height:100%;"></div></td>
         </tr>
       </table>
       <table>
         <td>
           <div>
-            <input type="color" id="cp" name="ColorPicker" value="#e66465">
+            <input type="color" id="cp" name="ColorPicker" value="#e66465" oninput="lightColorControl(this.value)">
             <label for="ColorPicker">Color Picker</label>
           </div>
         </td>
