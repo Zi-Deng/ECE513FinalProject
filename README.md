@@ -2,8 +2,6 @@
 
 A Particle project named 513 Final Project
 
-Github Link - https://github.com/Zi-Deng/ECE513FinalProject/tree/main
-
 ## Team 11 Information
 Zi Deng - 1st Year PHD ECE - zkdeng@email.arizona.edu
 Parker Dattilo - 4th Year Undergraduate ECE - parkerdattilo@email.arizona.edu
@@ -73,4 +71,4 @@ To use the Particle portion of our repository. Change directories into the Parti
 
 To use the the localhost features of our repository. Change directories into the WebGUI directory. Use the node package manager to install the serial port package. Then use node to start the JavaScript code to spin up the server. Once the GUI is started you can change various settings and values of the particle device using the GUI.
 
-To use the AWS features, follow the instructions in the video and the links on the website along with our server state diagram. Essentially, you can make an account, login, create your particle device, and then ping it to see whether or not it is online. For right now, the links are hard-coded for our test case because of an issue reading the values in the database (the values ARE there, but for some reason the url string and the access token generated with the variables was not working when concatenating them with the rest of the url and access token strings)
+To use the AWS features, follow the instructions in the video and the links on the website along with our server state diagram. Currently, we do not have remote control from AWS to the particle device. We do, however, store all the temperature, humidity, and power data in our database. Because we cannot send commands to the device, the power is not correct on the AWS side (since it depends on the fan setting and other). We are also not displaying the temperature/humidity graphs visually due to issues we were having with the chart.js software we were using
