@@ -47,6 +47,22 @@
         serailCmd({cmd:"scan"});
       });
 
+      var referenceTimeInSec = null;
+      var clockUnit = 60;     // 1 sec --> 1 minutes
+      let simulatedTime = null;
+      function simulatedClock(data) {
+          let str = "";
+          if ("t" in data) {
+              if (referenceTimeInSec == null) {
+                referenceTimeInSec = data.t;
+              }
+              let curTimeInSec = data.t;
+              let simTimeInSec = referenceTimeInSec + (curTimeInSec-referenceTimeInSec)*clockUnit;
+              let curTime = new Date(curTimeInSec*1000);
+              simulatedTime = new Date(simTimeInSec*1000);
+          }
+      }
+
       function initRangeSliders() {
         var inputs = $('input[type="range"]');
         var ranges = {};
@@ -117,7 +133,21 @@
         /*if ("System" in data) $("#systemstatus").html(data.System);
         if ("Fan" in data) $(#fanstatus).html(data.Fan);
         */
-        if ("simclock" in data) $('#curTime').html(data.simclock);
+        //if ("simclock" in data) $('#curTime').html(data.simclock);
+        if ("t" in data) {
+          simulatedClock(data)
+          $('#curTime').html(simulatedTime);
+          // let txcmd = {
+          //   cmd: "write",
+          //   data: {
+          //     time: {currTime: simulatedTime};
+          //   }
+          // };
+          // txcmd.data.smartlight[option] = value;
+
+          // console.log(JSON.stringify(txcmd));
+          // serailCmd(txcmd);
+        }
       }
 
       function serailCmd(data) {

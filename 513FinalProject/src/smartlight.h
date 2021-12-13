@@ -39,6 +39,8 @@ private:
     int sensorVal;
     int sensorMax;
     int sensorMin;
+    int wakeTime = 30;
+    int sleepTime = 1320;
     SmartLightCmdStruct cmd;
     String statusStr;
 };

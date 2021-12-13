@@ -10,11 +10,12 @@
 #include "door.h"
 #include "thermostat.h"
 
+
 void serialCmdProcessing();
 void myWebhookHandler(const char *event, const char *data);
 void setup();
 void loop();
-#line 7 "/Users/zi/Documents/UofA/ECE513FinalProject/513FinalProject/src/513FinalProject.ino"
+#line 8 "/Users/zi/Documents/UofA/ECE513FinalProject/513FinalProject/src/513FinalProject.ino"
 SYSTEM_THREAD(ENABLED);
 #define DHTPIN 2     // what pin we're connected to
 #define DHTTYPE DHT11		// DHT 11
@@ -25,6 +26,7 @@ CDoor door;
 CThermostat thermostat;
 int counter;
 String finalStatusStr;
+int timeInt;
 //bool bPublish;
 //String rxCloudCmdStr;
 
@@ -111,7 +113,8 @@ void loop() {
   serialCmdProcessing();
   smartLight.execute();
   thermostat.execute(temp);
-  //door.execute();
+  door.execute();
+
   unsigned long period = millis() - t;
 
 
@@ -123,15 +126,11 @@ void loop() {
 
       return;
     }
-
-    finalStatusStr = String::format("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
-      (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), thermostat.getStatusStr().c_str(), h, temp,
-      period);
-
-    // Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld}",
-    //   (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), thermostat.getStatusStr().c_str(), h, temp,
-    //   period
-    // );
+    timeInt = (int)(Time.now() % 1440);
+    //timeInt = timeInt % 24;
+    finalStatusStr = String::format("{\"t\":%d,\"light\":%s, \"door\":%s, \"thermostat\":%s, \"Humid\":%.2f, \"Temp\":%.2f, \"ct\":%ld, \"minute\":%d}",
+      Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(), thermostat.getStatusStr().c_str(), h, temp,
+      period, timeInt);
     Serial.printf(finalStatusStr);
     Serial.println();
 

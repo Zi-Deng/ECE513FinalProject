@@ -36,6 +36,7 @@ class CDoor {
     int oldTime;
     int newTime;
     DoorCmdStruct cmd;
+    int alert;
     String statusStr;
 
 };

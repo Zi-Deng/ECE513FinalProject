@@ -9,6 +9,7 @@ struct ThermostatStruct {
   int fanMode = 0; //0: auto, 1: on
   int fanStatus = 0; //0: off 1: on
   int assignedTemp = 0;
+  int powerConsumption = 100;
 };
 
 class CThermostat {

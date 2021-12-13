@@ -54,14 +54,13 @@ void CDoor::execute() {
 
       newTime = Time.now();
       if (newTime - oldTime > 10) {
-        Serial.printf("{\"alert\": %d}", true);
-        Serial.println();
+        alert = 1;
+      } else {
+        alert = 0;
       }
       if (amountOfProximity < 0.5) {
-        //RGB.brightness(RGB_BRIGHTNESS_MAX);
         digitalWrite(LED2, HIGH);
       } else {
-        //RGB.brightness(0);
         digitalWrite(LED2, LOW);
         oldTime = Time.now();
         state_D0 = CDoor::S_CLOSED;
@@ -84,8 +83,8 @@ int CDoor::getSensorVal() {
 }
 
 void CDoor::createStatusStr() {
-  statusStr = String::format("{\"Close\":%d, \"doorProximity\":%.2f, \"sensorVal\":%d}",
-    state_D0, doorProximity, sensorVal
+  statusStr = String::format("{\"Close\":%d, \"doorProximity\":%.2f, \"sensorVal\":%d, \"alert\":%d}",
+    state_D0, doorProximity, sensorVal, alert
   );
 }
 
