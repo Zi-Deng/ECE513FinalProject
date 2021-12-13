@@ -89,7 +89,8 @@
         if ("light" in data) {
           if ("s" in data.light) $("#sensorVal").html( data.light.s);
           if ("b" in data.light) {
-            $('#curBrightness').css("background-color", `hsl(61, ${data.light.b}%, 50%)`);
+            //$('#curBrightness').css("background-color", `hsl(61, ${data.light.b}%, 50%)`);
+            $("#curBrightness").css("background-color", "#ColorPicker");
             $('#curBrightness').html(data.light.b);
           }
         }
@@ -99,7 +100,8 @@
           $("#humid").html(data.Humid);
         }
         if ("Temp" in data) {
-          $("#temp").html(convertToFahr(data.Temp));
+          //$("#temp").html(convertToFahr(data.Temp));
+          $("#temp").html(data.Temp);
         }
         //update door status
         if ("door" in data) {
@@ -114,10 +116,27 @@
             }
           }
         }
-        /*
-        if ("System" in data) $("#systemstatus").html(data.System);
-        if ("Fan" in data) $(#fanstatus).html(data.Fan);
-        */ 
+        if ("thermostat" in data) {
+          if ("heatStatus" in data.thermostat) {
+            if (data.thermostat.heatStatus === 1) {
+              $("#systemstatus").html("HEAT");
+            }
+            else if (data.thermostat.coolStatus === 1) {
+              $("#systemstatus").html("COOL");
+            }
+            else {
+              $("#systemstatus").html("OFF")
+            }
+          }
+          if ("fanStatus" in data.thermostat) {
+            if (data.thermostat.fanStatus === 1) {
+              $("#fanstatus").html("ON");
+            }
+            else {
+              $("#fanstatus").html("AUTO");
+            }
+          }
+        } 
         if ("simclock" in data) $('#curTime').html(data.simclock);
       }
 
@@ -206,7 +225,6 @@
           }
         };
         txcmd.data.smartlight[option] = value;
-
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
@@ -229,7 +247,7 @@
           data: {
             systemControl: {"heat": 1}
           }
-        }
+        };
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
@@ -241,7 +259,7 @@
           data: {
             systemControl: {"off": 1}
           }
-        }
+        };
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
@@ -252,7 +270,7 @@
           data: {
             systemControl: {"cool": 1}
           }
-        }
+        };
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
@@ -262,9 +280,9 @@
         let txcmd = {
           cmd: "write",
           data: {
-            fanControl: {"fan": 1}
+            systemControl: {"fan": 1}
           }
-        }
+        };
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
@@ -273,9 +291,9 @@
         let txcmd = {
           cmd: "write",
           data: {
-            fanControl: {"fan": 0}
+            systemControl: {"fan": 0}
           }
-        }
+        };
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
@@ -283,9 +301,17 @@
         let newTemp = (parseFloat(currTemp) * (9/5)) + 32;
         return newTemp;
       }
-      function tempSet(data, setTemp) {
-        let currTemp = convertToFahr(data.Temp);
-        
+      function tempSet(option, value) {
+        window.alert(value.val());
+        let txcmd = {
+          cmd: "write",
+          data: {
+            systemControl: { }
+          }
+        };
+        txcmd.data.thermostat[option] = value;
+        console.log(JSON.stringify(txcmd));
+        serailCmd(txcmd);
       }
 
 
@@ -432,9 +458,11 @@
           <!-- Add humidity display onclick function-->
         </tr>
         <tr>
+          <td>Set Temperature:</td>
           <td>
-            <input id="tempSet" type="text" name="setTemp">
-            <button id="tempSetButton" onclick="tempSet()">Set Temperature</button>
+            <!-- <input id="tempSet" type="text" name="setTemp">
+            <button id="tempSetButton" onclick="tempSet(this.value)">Set Temperature</button> -->
+            <input id="tempSetBttn" type="range" min="0" max="120" step="1" value="0" onchange="tempSet('temp', this.value)">
           </td>
         </tr>
       </table>
