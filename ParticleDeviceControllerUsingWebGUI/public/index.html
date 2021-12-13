@@ -302,17 +302,28 @@
         return newTemp;
       }
       function tempSet(option, value) {
-        window.alert(value.val());
+        //window.alert(value);
         let txcmd = {
           cmd: "write",
           data: {
             systemControl: { }
           }
         };
-        txcmd.data.thermostat[option] = value;
+        txcmd.data.systemControl["temp"] = value;
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
+      // function smartLightControl(option, value) {
+      //   let txcmd = {
+      //     cmd: "write",
+      //     data: {
+      //       smartlight: { }
+      //     }
+      //   };
+      //   txcmd.data.smartlight[option] = value;
+      //   console.log(JSON.stringify(txcmd));
+      //   serailCmd(txcmd);
+      // }
 
 
 
