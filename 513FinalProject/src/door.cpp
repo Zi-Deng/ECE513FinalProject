@@ -54,9 +54,10 @@ void CDoor::execute() {
 
       newTime = Time.now();
       if (newTime - oldTime > 10) {
-        alert = 1;
+        state_D0 = CDoor::S_ALERT;
       } else {
-        alert = 0;
+        //alert = 0;
+        state_D0 = CDoor::S_OPEN;
       }
       if (amountOfProximity < 0.5) {
         digitalWrite(LED2, HIGH);

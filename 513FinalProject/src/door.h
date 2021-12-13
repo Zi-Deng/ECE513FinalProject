@@ -9,7 +9,7 @@ struct DoorCmdStruct {
 };
 
 class CDoor {
-  enum STATE_D0 { S_OPEN, S_CLOSED};
+  enum STATE_D0 { S_OPEN, S_CLOSED, S_ALERT };
 
   public:
     CDoor();

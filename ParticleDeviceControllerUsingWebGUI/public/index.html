@@ -110,9 +110,13 @@
               $("#doorstatus").css("background-color", "white");
               $("#doorstatus").html("Door is closed");
             }
-            else {
-              $("#doorstatus").css("background-color", "red");
+            else if (data.door.Close === 1) {
+              $("#doorstatus").css("background-color", "white");
               $("#doorstatus").html("Door is opened!");
+            }
+            else if (data.door.Close === 2) {
+              $("#doorstatus").css("background-color", "red");
+              $("#doorstatus").html("Door is opened for a long while!");
             }
           }
         }
