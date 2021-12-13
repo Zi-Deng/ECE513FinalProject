@@ -1,0 +1,152 @@
+#include "Adafruit_DHT.h"
+#include "common.h"
+#include "smartlight.h"
+#include "door.h"
+
+SYSTEM_THREAD(ENABLED);
+// Example testing sketch for various DHT humidity/temperature sensors
+// Written by ladyada, public domain
+
+#define DHTPIN 2     // what pin we're connected to
+
+DHT dht(DHTPIN, DHTTYPE);
+CSmartLight smartLight;
+CDoor door;
+int Scounter;
+int Ccounter;
+bool bPublish;      // enable/disable publish
+String rxCloudCmdStr; // receive command via internet
+String statusStr;
+uint8_t ledHighLow;
+
+int updateRxCmd(String cmdStr) {
+  //Serial.println(cmdStr.c_str());
+  rxCloudCmdStr = cmdStr;
+  return 0;
+}
+
+// command processing
+void cloudCmdProcessing() {
+  if (rxCloudCmdStr == "") return;
+  JSONValue cmdJson = JSONValue::parseCopy(rxCloudCmdStr);
+  JSONObjectIterator iter(cmdJson);
+  while (iter.next()) {
+    if (iter.name() == "publish") {
+      bPublish = iter.value().toBool();
+    }
+  }
+  rxCloudCmdStr = "";
+}
+
+void serialCmdProcessing() {
+  if (Serial.available() <= 0) return;
+  String cmdStr = "";
+  while (Serial.available()) {
+      char c = Serial.read();
+      cmdStr += String(c);
+  }
+  JSONValue cmdJson = JSONValue::parseCopy(cmdStr.c_str());
+  JSONObjectIterator iter(cmdJson);
+  while (iter.next()) {
+    if (iter.name() == "smartlight") {
+      smartLight.cmdProcessing(iter.value());
+    } else if (iter.name() == "door") {
+      door.cmdProcessing(iter.value());
+    }
+  }
+}
+
+void myWebhookHandler(const char *event, const char *data) {
+  // Formatting output
+  String output = String::format("Response:  %s", data);
+  // Log to serial console
+  Serial.println(output);
+}
+
+void setup() {
+  pinMode(LED, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  RGB.control(true);
+  RGB.color(255, 255, 255);
+  bPublish = false;
+  rxCloudCmdStr = "";
+  statusStr = "";
+  ledHighLow = LOW;
+
+	Serial.begin();
+
+  dht.begin();
+  // remote control
+  Particle.function("cloudcmd", updateRxCmd);
+  // Subscribe to the webhook response event
+  Particle.subscribe("hook-response/smarthome", myWebhookHandler);
+
+  Scounter = 0;
+  Ccounter = 0;
+}
+
+void loop() {
+// Wait a few seconds between measurements.
+	//delay(100);
+
+// Reading temperature or humidity takes about 250 milliseconds!
+// Sensor readings may also be up to 2 seconds 'old' (its a
+// very slow sensor)
+	float h = dht.getHumidity();
+// Read temperature as Celsius
+	float temp = dht.getTempCelcius();
+// Read temperature as Farenheit
+	float f = dht.getTempFarenheit();
+
+// Check if any reads failed and exit early (to try again).
+	if (isnan(h) || isnan(temp) || isnan(f)) {
+		//Serial.println("Failed to read from DHT sensor!");
+		Serial.printf("{\"Fail\": %d}", true);
+		Serial.println();
+
+		return;
+	}
+
+// Compute heat index
+// Must send in temp in Fahrenheit!
+	// float hi = dht.getHeatIndex();
+	// float dp = dht.getDewPoint();
+	// float k = dht.getTempKelvin();
+
+	Serial.printf("{\"Humid(Percent)\":%.2f, \"Temp(*C)\":%.2f}", h, temp);
+	Serial.println();
+
+  unsigned long t = millis();
+
+  serialCmdProcessing();
+  cloudCmdProcessing();
+  smartLight.execute();
+  unsigned long period = millis() - t;
+
+  door.execute();
+  if (Scounter % (SERAIL_COMM_FREQUENCY * LOOP_FREQUENCY) == 0) {
+    Scounter = 0;
+    Serial.printf("{\"t\":%d,\"light\":%s, \"door\":%s, \"ct\":%ld}",
+      (int)Time.now(), smartLight.getStatusStr().c_str(), door.getStatusStr().c_str(),
+      period
+    );
+    Serial.println();
+  }
+
+  if (Ccounter % (PUBLISH_FREQUENCY * LOOP_FREQUENCY) == 0) {
+    Ccounter = 0;
+    statusStr = String::format("{\"t\":%d}", (int)Time.now());
+    if (bPublish) {
+      Particle.publish("smarthome", statusStr, PRIVATE);
+      // if (ledHighLow == LOW) ledHighLow = HIGH;
+      // else ledHighLow = LOW; 
+      //digitalWrite(LED, ledHighLow);
+    }
+  }
+  Scounter++;
+  Ccounter++;
+  // unsigned long period = millis() - t;
+  period = PERIOD - (millis()-t);
+  if (period > 0) delay(period); 
+}
+
