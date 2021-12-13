@@ -35,12 +35,10 @@ void CDoor::execute() {
       if (curSensorVal > sensorMax) curSensorVal = sensorMax;
       double amountOfProximity = (double)(curSensorVal-sensorMin) / (double)(sensorMax-sensorMin);
       if (amountOfProximity < 0.5) {
-        //RGB.brightness(RGB_BRIGHTNESS_MAX);
         digitalWrite(LED2, HIGH);
         oldTime = Time.now();
         state_D0 = CDoor::S_OPEN;
       } else {
-        RGB.brightness(0);
         digitalWrite(LED2, LOW);
       }}
       break;
@@ -56,8 +54,7 @@ void CDoor::execute() {
       if (newTime - oldTime > 10) {
         state_D0 = CDoor::S_ALERT;
       } else {
-        //alert = 0;
-        state_D0 = CDoor::S_OPEN;
+        state_D0 = CDoor::S_CLOSED;
       }
       if (amountOfProximity < 0.5) {
         digitalWrite(LED2, HIGH);

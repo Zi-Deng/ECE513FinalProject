@@ -52,7 +52,7 @@ void CThermostat::execute(float currTemp) {
         }
       } else if (currTemp == thermoStruct.assignedTemp) {
         thermoStruct.heat = 0;
-        thermoStruct.cool = 2;
+        thermoStruct.cool = 1;
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
           thermoStruct.powerConsumption = 3700;

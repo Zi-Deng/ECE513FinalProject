@@ -108,11 +108,11 @@
           if ("Close" in data.door) {
             if (data.door.Close === 0) {
               $("#doorstatus").css("background-color", "white");
-              $("#doorstatus").html("Door is closed");
+              $("#doorstatus").html("Door is open!");
             }
             else if (data.door.Close === 1) {
               $("#doorstatus").css("background-color", "white");
-              $("#doorstatus").html("Door is opened!");
+              $("#doorstatus").html("Door is closed");
             }
             else if (data.door.Close === 2) {
               $("#doorstatus").css("background-color", "red");

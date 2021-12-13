@@ -141,6 +141,6 @@ int CSmartLight::getSensorVal() {
 void CSmartLight::createStatusStr() {
     //time_t ti = Time.now();
     //std::time_t result = std::time(nullptr);
-    statusStr = String::format("{\"L0\":%d,\"L1\":%d,\"b\":%d,\"s\":%d,\"m\":%d,\"M\":%d,\"red\":%d}",
-        state_L0, state_L1, (int)((double)brightness/RGB_BRIGHTNESS_MAX*100.0), sensorVal, sensorMin, sensorMax, red);
+    statusStr = String::format("{\"L0\":%d,\"L1\":%d,\"b\":%d,\"s\":%d,\"m\":%d,\"M\":%d,\"red\":%d, \"green\":%d, \"blue\":%d}",
+        state_L0, state_L1, (int)((double)brightness/RGB_BRIGHTNESS_MAX*100.0), sensorVal, sensorMin, sensorMax, red, green, blue);
 }
