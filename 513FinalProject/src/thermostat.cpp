@@ -26,7 +26,7 @@ void CThermostat::cmdProcessing(JSONValue cmdJson) {
 }
 
 void CThermostat::execute(float currTemp) {
-  thermoStruct.assignedTemp = 30;
+  //thermoStruct.assignedTemp = 30;
 
   switch (sys_state) {
     case CThermostat::S_HEAT:
@@ -93,6 +93,6 @@ void CThermostat::resetCmd() {
 }
 
 void CThermostat::createStatusStr() {
-    statusStr = String::format("{\"heatStatus\":%d,\"coolStatus\":%d,\"fanStatus\":%d, \"power\":%d}",
-      thermoStruct.heat, thermoStruct.cool, thermoStruct.fanMode, thermoStruct.powerConsumption);
+    statusStr = String::format("{\"heatStatus\":%d,\"coolStatus\":%d,\"fanStatus\":%d, \"power\":%d, \"setTemp\":%d}",
+      thermoStruct.heat, thermoStruct.cool, thermoStruct.fanMode, thermoStruct.powerConsumption, thermoStruct.assignedTemp);
 }
