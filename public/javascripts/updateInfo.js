@@ -44,7 +44,7 @@ $(document).ready(function() {
             }
         }
         if($("#zip").val() != ""){
-            if($("#zip").val().match(/^\d\d\d\d\d$/)) txData["zip"] = $("zip").val();
+            if($("#zip").val().match(/^\d\d\d\d\d$/)) {txData["zip"] = $("#zip").val();}
             else{
                 $('#rxData').html("Please enter a valid zip code");
                 return
@@ -62,12 +62,13 @@ $(document).ready(function() {
             //userName = JSON.stringify(data.message,null,2)
             //successful login, redirects to main page
             //$("#Register").hide()
-            $('#rxData').html("Account info successfully updated. Return <a href='home.html'>home</a>");
+            $('#rxData').html(JSON.stringify(data.message,null,2).replace(/\"/g, ""));
         })
         .fail(function(jqXHR, textStatus, errorThrown){
             //JSON.stringify(jqXHR.responseJSON.message,null,2)
             //$('#rxData').html(window.localStorage.getItem("token"));
-            $('#rxData').html(JSON.stringify(jqXHR.responseJSON.message,null,2).replace(/\"/g, ""));
+            $('#rxData').html(JSON.stringify(jqXHR,null,2));
+            // $('#rxData').html(JSON.stringify(txData));
         });
     });
 });
