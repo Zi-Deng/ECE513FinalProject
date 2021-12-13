@@ -51,13 +51,14 @@ void CDoor::execute() {
       doorProximity = amountOfProximity;
 
       newTime = Time.now();
-      if (newTime - oldTime > 10) {
-        state_D0 = CDoor::S_ALERT;
-      } else {
-        state_D0 = CDoor::S_CLOSED;
-      }
+
       if (amountOfProximity < 0.5) {
         digitalWrite(LED2, HIGH);
+        if (newTime - oldTime > 10) {
+          state_D0 = CDoor::S_ALERT;
+        } else {
+          state_D0 = CDoor::S_OPEN;
+        }
       } else {
         digitalWrite(LED2, LOW);
         oldTime = Time.now();
@@ -65,6 +66,22 @@ void CDoor::execute() {
       }
     }
       break;
+    case CDoor::S_ALERT: {
+      readSensorVal();
+      int curSensorVal = getSensorVal();
+      if (curSensorVal < sensorMin) curSensorVal = sensorMin;
+      if (curSensorVal > sensorMax) curSensorVal = sensorMax;
+      double amountOfProximity = (double)(curSensorVal-sensorMin) / (double)(sensorMax-sensorMin);
+      doorProximity = amountOfProximity;
+
+      if (amountOfProximity < 0.5) {
+        digitalWrite(LED2, HIGH);
+      } else {
+        digitalWrite(LED2, LOW);
+        state_D0 = CDoor::S_CLOSED;
+      }
+      break;
+    }
     default:
       break;
   }
@@ -81,8 +98,8 @@ int CDoor::getSensorVal() {
 }
 
 void CDoor::createStatusStr() {
-  statusStr = String::format("{\"Close\":%d, \"doorProximity\":%.2f, \"sensorVal\":%d, \"alert\":%d}",
-    state_D0, doorProximity, sensorVal, alert
+  statusStr = String::format("{\"Close\":%d, \"doorProximity\":%.2f, \"sensorVal\":%d}",
+    state_D0, doorProximity, sensorVal
   );
 }
 
