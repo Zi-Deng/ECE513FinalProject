@@ -24,8 +24,6 @@ class CDoor {
 
   private:
     void resetCmd();
-    void monitorDoor();
-    void sendAlert();
     void createStatusStr();
 
     STATE_D0 state_D0;

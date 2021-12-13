@@ -18,6 +18,49 @@ https://www.youtube.com/watch?v=uYM8ej9cJ70&ab_channel=ParkerD
 ### Particle Information
 We are using an Argon Particle device. Particle ID e00fce6885903bb14139f4eb
 
+### Implementation
+Our Particle firmware contains four main classes that implement various features of a Smart Home.
+
+All four classes implement the same form of serial command processing using the following methods:
+- cmdProcessing() - Receive data from localhost/web server and populate correct variables.
+- createStatusStr() - Creates status string to send to localhost/web server.
+
+**CSmartLight** controls the color, brightness, auto/manual, and sleep/wake times on the smart light.
+- SmartLight
+  - turnOffLight()
+  - updateBrightnessManually()
+  - updateBrightnessAutomatically()
+  - execute() - Checks if time is the wake or sleep time for the light, sets the color of the light based on red, green, blue values from the GUI, then based on the manual or auto setting will control the brightness.
+
+*Smart light status string variables*: L0(on/off), L1(auto/manual), b(brightness), s(sensor value), M(sensor min), M(sensor max), red, green, blue
+
+**CDoor** controls the open/close status of the door and sends an alert if the door is open too long.
+- CDoor
+  -
+
+**CThermostat** controls the heating, cooling, and fan simulations as well as its respective power estimation.
+- CThermostat
+  - execute() - Sets the parameters for heating, cooling, fan and power based on DHT temperature reading.
+
+*Thermostat status string variables*: heatStatus, coolStatus, fanStatus, power, setTemp
+
+Our power estimation uses the heating, cooling, and fan status to determine the overall watt hour (Wh) for the device.
+- Our base power consumption with all features turned off is 100 Wh.
+- Heating the smart home is costly and requires 3700 Wh to operate.
+- Cooling the smart home is less but still requires 3200 Wh to operate.
+- Turning on the fan at any point will cause increase of 500 Wh to the cost.
+
+This results in:
+- Heat On / Fan Off = 3800 Wh
+- Heat On / Fan On = 4400 Wh
+- Cool On / Fan Off = 3200 Wh
+- Cool On / Fan On = 3700 Wh
+- All Off = 100 Wh
+
+AWS
+Localhost
+-writePort c
+
 ### Implementation Description
 Our particle firmware uses code from the ECE513 smartLightExample code and the Particle Adafruit DHT library example code. In it, we create a C++ class on the functionality that we want to implement onto our device, then create variables and functions to enable the functionality in mind.
 
@@ -31,36 +74,3 @@ To use the Particle portion of our repository. Change directories into the Parti
 To use the the localhost features of our repository. Change directories into the WebGUI directory. Use the node package manager to install the serial port package. Then use node to start the JavaScript code to spin up the server.
 
 To use the AWS features, follow the instructions in the video and the links on the website along with our server state diagram. Essentially, you can make an account, login, create your particle device, and then ping it to see whether or not it is online. For right now, the links are hard-coded for our test case because of an issue reading the values in the database (the values ARE there, but for some reason the url string and the access token generated with the variables was not working when concatenating them with the rest of the url and access token strings)
-
-## General Particle Project Information
-
-
-Every new Particle project is composed of 3 important elements that you'll see have been created in your project directory for 513FinalProject.
-
-#### ```/src``` folder:
-This is the source folder that contains the firmware files for your project. It should *not* be renamed.
-Anything that is in this folder when you compile your project will be sent to our compile service and compiled into a firmware binary for the Particle device that you have targeted.
-
-If your application contains multiple files, they should all be included in the `src` folder. If your firmware depends on Particle libraries, those dependencies are specified in the `project.properties` file referenced below.
-
-#### ```.ino``` file:
-This file is the firmware that will run as the primary application on your Particle device. It contains a `setup()` and `loop()` function, and can be written in Wiring or C/C++. For more information about using the Particle firmware API to create firmware for your Particle device, refer to the [Firmware Reference](https://docs.particle.io/reference/firmware/) section of the Particle documentation.
-
-#### ```project.properties``` file:
-This is the file that specifies the name and version number of the libraries that your project depends on. Dependencies are added automatically to your `project.properties` file when you add a library to a project using the `particle library add` command in the CLI or add a library in the Desktop IDE.
-
-## Adding additional files to your project
-
-#### Projects with multiple sources
-If you would like add additional files to your application, they should be added to the `/src` folder. All files in the `/src` folder will be sent to the Particle Cloud to produce a compiled binary.
-
-#### Projects with external libraries
-If your project includes a library that has not been registered in the Particle libraries system, you should create a new folder named `/lib/<libraryname>/src` under `/<project dir>` and add the `.h`, `.cpp` & `library.properties` files for your library there. Read the [Firmware Libraries guide](https://docs.particle.io/guide/tools-and-features/libraries/) for more details on how to develop libraries. Note that all contents of the `/lib` folder and subfolders will also be sent to the Cloud for compilation.
-
-## Compiling your project
-
-When you're ready to compile your project, make sure you have the correct Particle device target selected and run `particle compile <platform>` in the CLI or click the Compile button in the Desktop IDE. The following files in your project folder will be sent to the compile service:
-
-- Everything in the `/src` folder, including your `.ino` application file
-- The `project.properties` file for your project
-- Any libraries stored under `lib/<libraryname>/src`
