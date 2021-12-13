@@ -19,7 +19,6 @@ https://www.youtube.com/watch?v=uYM8ej9cJ70&ab_channel=ParkerD
 We are using an Argon Particle device. Particle ID e00fce6885903bb14139f4eb
 
 ## Implementation
-### Particle
 Our Particle firmware contains four main classes that implement various features of a Smart Home.
 
 All four classes implement the same form of serial command processing using the following methods:
