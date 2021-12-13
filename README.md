@@ -2,6 +2,8 @@
 
 A Particle project named 513 Final Project
 
+Github Link - https://github.com/Zi-Deng/ECE513FinalProject/tree/main
+
 ## Team 11 Information
 Zi Deng - 1st Year PHD ECE - zkdeng@email.arizona.edu
 Parker Dattilo - 4th Year Undergraduate ECE - parkerdattilo@email.arizona.edu
