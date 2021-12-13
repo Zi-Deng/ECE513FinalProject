@@ -12,7 +12,6 @@
 
 
 void serialCmdProcessing();
-void myWebhookHandler(const char *event, const char *data);
 void setup();
 void loop();
 #line 8 "/Users/zi/Documents/UofA/ECE513FinalProject/513FinalProject/src/513FinalProject.ino"
@@ -27,8 +26,8 @@ CThermostat thermostat;
 int counter;
 String finalStatusStr;
 int timeInt;
-//bool bPublish;
-//String rxCloudCmdStr;
+// bool bPublish;
+// String rxCloudCmdStr;
 
 
 // int updateRxCmd(String cmdStr) {
@@ -41,16 +40,14 @@ int timeInt;
 //   JSONValue cmdJson = JSONValue::parseCopy(rxCloudCmdStr);
 //   JSONObjectIterator iter(cmdJson);
 //   while (iter.next()) {
-//     if (iter.name()) {
-//       if (iter.name() == "publish") {
-//         bPublish = iter.value().toBool();
-//       } else if (iter.name() == "smartlight") {
-//         smartLight.cmdProcessing(iter.value());
-//       } else if (iter.name() == "door") {
-//         door.cmdProcessing(iter.value());
-//       } else if (iter.name() == "systemControl") {
-//         thermostat.cmdProcessing(iter.value());
-//       }
+//     if (iter.name() == "publish") {
+//       bPublish = iter.value().toBool();
+//     } else if (iter.name() == "smartlight") {
+//       smartLight.cmdProcessing(iter.value());
+//     } else if (iter.name() == "door") {
+//       door.cmdProcessing(iter.value());
+//     } else if (iter.name() == "systemControl") {
+//       thermostat.cmdProcessing(iter.value());
 //     }
 //   }
 //   rxCloudCmdStr = "";
@@ -76,10 +73,10 @@ void serialCmdProcessing() {
   }
 }
 
-void myWebhookHandler(const char *event, const char *data) {
-  String output = String::format("Response: %s", data);
-  Serial.println(output);
-}
+// void myWebhookHandler(const char *event, const char *data) {
+//   String output = String::format("Response: %s", data);
+//   Serial.println(output);
+// }
 
 void setup() {
   pinMode(LED, OUTPUT);
@@ -95,9 +92,9 @@ void setup() {
 
   // bPublish = false;
   // rxCloudCmdStr = "";
-  finalStatusStr = "";
+  // finalStatusStr = "";
 
-  // Particle.function("cloundcmd", updateRxCmd);
+  // Particle.function("cloudcmd", updateRxCmd);
   // Particle.subscribe("hook-response/smarthome", myWebhookHandler);
 }
 
@@ -134,7 +131,9 @@ void loop() {
     Serial.printf(finalStatusStr);
     Serial.println();
 
-    //Particle.publish("smarthome", finalStatusStr, PRIVATE);
+    // if (bPublish) {
+    //   Particle.publish("smarthome", finalStatusStr, PRIVATE);
+    // }
   }
   counter++;
 

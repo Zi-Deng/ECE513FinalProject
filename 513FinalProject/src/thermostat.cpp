@@ -36,9 +36,9 @@ void CThermostat::execute(float currTemp) {
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
           thermoStruct.powerConsumption = 600;
-        } else {
+        } else if (thermoStruct.fanMode == 0) {
           thermoStruct.fanStatus = 0;
-          thermoStruct.powerConsumption = 0;
+          thermoStruct.powerConsumption = 100;
         }
       } else if (currTemp < thermoStruct.assignedTemp) {
         thermoStruct.heat = 2;
@@ -46,8 +46,8 @@ void CThermostat::execute(float currTemp) {
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
           thermoStruct.powerConsumption = 4400;
-        } else {
-          thermoStruct.fanStatus = 100;
+        } else if (thermoStruct.fanMode == 0) {
+          thermoStruct.fanStatus = 0;
           thermoStruct.powerConsumption = 3800;
         }
       }
@@ -59,19 +59,19 @@ void CThermostat::execute(float currTemp) {
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
           thermoStruct.powerConsumption = 3700;
-        } else {
+        } else if (thermoStruct.fanMode == 0) {
           thermoStruct.fanStatus = 1;
-          thermoStruct.powerConsumption =3700;
+          thermoStruct.powerConsumption = 3700;
         }
       } else if (currTemp < thermoStruct.assignedTemp) {
         thermoStruct.heat = 0;
         thermoStruct.cool = 2;
         if (thermoStruct.fanMode == 1) {
           thermoStruct.fanStatus = 1;
-          thermoStruct.powerConsumption = 3100;
-        } else {
-          thermoStruct.fanStatus = 0;
           thermoStruct.powerConsumption = 600;
+        } else if (thermoStruct.fanMode == 0) {
+          thermoStruct.fanStatus = 0;
+          thermoStruct.powerConsumption = 100;
         }
       }
       break;
@@ -98,5 +98,5 @@ void CThermostat::resetCmd() {
 
 void CThermostat::createStatusStr() {
     statusStr = String::format("{\"heatStatus\":%d,\"coolStatus\":%d,\"fanStatus\":%d, \"power\":%d, \"setTemp\":%d}",
-      thermoStruct.heat, thermoStruct.cool, thermoStruct.fanMode, thermoStruct.powerConsumption, thermoStruct.assignedTemp);
+      thermoStruct.heat, thermoStruct.cool, thermoStruct.fanStatus, thermoStruct.powerConsumption, thermoStruct.assignedTemp);
 }

@@ -116,13 +116,20 @@
             }
           }
         }
+        $("#systemstatus").html("OFF");
         if ("thermostat" in data) {
           if ("heatStatus" in data.thermostat) {
             if (data.thermostat.heatStatus === 1) {
-              $("#systemstatus").html("HEAT");
+              $("#systemstatus").html("HEAT is OFF");
+            }
+            else if (data.thermostat.heatStatus === 2) {
+              $("#systemstatus").html("HEAT is ON");
             }
             else if (data.thermostat.coolStatus === 1) {
-              $("#systemstatus").html("COOL");
+              $("#systemstatus").html("COOL is ON");
+            }
+            else if (data.thermostat.coolStatus === 2) {
+              $("#systemstatus").html("COOL is OFF")
             }
             else {
               $("#systemstatus").html("OFF")
@@ -133,7 +140,7 @@
               $("#fanstatus").html("ON");
             }
             else {
-              $("#fanstatus").html("AUTO");
+              $("#fanstatus").html("OFF");
             }
           }
         }
@@ -241,7 +248,6 @@
       }
 
       function toggleClimateControlHeat() {
-        window.alert("Climate Control set to HEAT");
         let txcmd = {
           cmd: "write",
           data: {
@@ -253,7 +259,6 @@
       }
 
       function toggleClimateControlOff() {
-        window.alert("Climate Control set to OFF");
         let txcmd = {
           cmd: "write",
           data: {
@@ -264,7 +269,6 @@
         serailCmd(txcmd);
       }
       function toggleClimateControlCool() {
-        window.alert("Climate Control set to COOL");
         let txcmd = {
           cmd: "write",
           data: {
@@ -276,7 +280,6 @@
       }
 
       function toggleFanOn() {
-        window.alert("Fan On");
         let txcmd = {
           cmd: "write",
           data: {
@@ -287,7 +290,6 @@
         serailCmd(txcmd);
       }
       function toggleFanAuto() {
-        window.alert("Fan Auto");
         let txcmd = {
           cmd: "write",
           data: {
@@ -302,30 +304,16 @@
         return newTemp;
       }
       function tempSet(option, value) {
-        //window.alert(value);
         let txcmd = {
           cmd: "write",
           data: {
             systemControl: { }
           }
         };
-        txcmd.data.systemControl["temp"] = value;
+        txcmd.data.systemControl[option] = value;
         console.log(JSON.stringify(txcmd));
         serailCmd(txcmd);
       }
-      // function smartLightControl(option, value) {
-      //   let txcmd = {
-      //     cmd: "write",
-      //     data: {
-      //       smartlight: { }
-      //     }
-      //   };
-      //   txcmd.data.smartlight[option] = value;
-      //   console.log(JSON.stringify(txcmd));
-      //   serailCmd(txcmd);
-      // }
-
-
 
 </script>
   </head>
