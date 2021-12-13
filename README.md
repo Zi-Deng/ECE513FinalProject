@@ -36,7 +36,7 @@ All four classes implement the same form of serial command processing using the 
 
 **CDoor** controls the open/close status of the door and sends an alert if the door is open too long.
 - CDoor
-  -
+  - execute()
 
 **CThermostat** controls the heating, cooling, and fan simulations as well as its respective power estimation.
 - CThermostat
