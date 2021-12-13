@@ -13,7 +13,8 @@ We are a ECE513 Group.
 http://ec2-18-116-89-134.us-east-2.compute.amazonaws.com:3000/index.html
 
 ## Video Demonstration
-https://www.youtube.com/watch?v=uYM8ej9cJ70&ab_channel=ParkerD
+https://www.youtube.com/watch?v=keiGQiL5zdw
+https://www.youtube.com/watch?v=aHX9m14uYYE
 
 ## Particle Information
 We are using an Argon Particle device. Particle ID e00fce6885903bb14139f4eb
