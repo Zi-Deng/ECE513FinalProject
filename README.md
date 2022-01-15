@@ -1,6 +1,6 @@
 # ECE513 Final Project
 
-A Particle project named 513 Final Project
+This is a Particle project named 513 Final Project
 
 ## Team 11 Information
 Zi Deng - 1st Year PHD ECE - zkdeng@email.arizona.edu
